@@ -11,6 +11,6 @@ async def cmd_start(message: types.Message):
 async def cmd_help(message: types.Message):
     await message.answer("Доступные команды:\n/start - запуск\n/help - помощь")
 
-@router.message(F.text.lower == "как дела?")
-async def how_are_you(message: types.Message):
-    await message.answer("Отлично! Работаю без выходных.")
+@router.message(F.text.lower().contains("как дела"))
+async def how_are_you_flexible(message: types.Message):
+    await message.answer("Отлично! Рад, что спросили.")
