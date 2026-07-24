@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def main():
-    bot = Bot(token=config.bot_token.get_secret_value())
+    bot = Bot(token=config.BOT_TOKEN.get_secret_value())
 
     dp = Dispatcher()
 
