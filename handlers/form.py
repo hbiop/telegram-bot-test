@@ -3,6 +3,8 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from sqlalchemy.ext.asyncio import AsyncSession
+from db.db_utils.base import Order
 
 router = Router()
 
@@ -60,15 +62,23 @@ async def process_description(message: types.Message, state: FSMContext):
 
 
 @router.callback_query(OrderForm.confirm, F.data == "form_confirm")
-async def form_confirmed(callback: types.CallbackQuery, state: FSMContext):
+async def form_confirmed(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
     data = await state.get_data()
 
+    new_order = Order(
+        user_id=callback.from_user.id,
+        user_name=data.get("user_name"),
+        user_age=data.get("user_age"),
+        user_desc=data.get("user_desc")
+    )
 
-    await callback.message.edit_text("🎉 Заявка успешно отправлена! Менеджер свяжется с вами.")
-    await callback.answer()
+    session.add(new_order)
+    await session.commit()
 
     await state.clear()
 
+    await callback.message.edit_text("🎉 Данные успешно сохранены в постоянную базу данных PostgreSQL!")
+    await callback.answer()
 
 @router.callback_query(F.data == "form_cancel")
 async def form_cancelled(callback: types.CallbackQuery, state: FSMContext):

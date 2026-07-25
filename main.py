@@ -5,6 +5,8 @@ from aiogram.fsm.storage.redis import RedisStorage
 from redis.asyncio import Redis
 from config_reader import config
 from handlers import common, menu, form
+from db.db_utils.session_maker import async_session
+from middlewares.db import DbSessionMiddleware
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +25,7 @@ async def main():
     bot = Bot(token=config.BOT_TOKEN.get_secret_value())
 
     dp = Dispatcher(storage=storage)
-
+    dp.update.middleware(DbSessionMiddleware(session_pool=async_session))
     dp.include_router(common.router)
     dp.include_router(menu.router)
     dp.include_router(form.router)
