@@ -10,7 +10,7 @@ from middlewares.db import DbSessionMiddleware
 
 logging.basicConfig(level=logging.INFO)
 
-
+#main
 async def main():
     redis_instance = Redis(
         host="redis-test-porem-578.db-msk0.amvera.tech",
