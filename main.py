@@ -13,7 +13,7 @@ async def main():
     redis_instance = Redis(
         host="redis-test-porem-578.db-msk0.amvera.tech",
         port=6379,
-        password="bottest",
+        password=config.REDIS_PASSWORD.get_secret_value(),
         ssl=True,
         ssl_cert_reqs=None
     )
