@@ -13,7 +13,7 @@ class MenuCallback(CallbackData, prefix="menu"):
 
 class BuyCallback(CallbackData, prefix="buy"):
     action: str
-    message: str
+    product_code: str
 
 @router.message(Command("menu"))
 async def show_menu(message: types.Message):
@@ -37,13 +37,14 @@ async def show_menu(message: types.Message):
 
 @router.callback_query(MenuCallback.filter(F.action == "open_cat"))
 async def process_category_click(callback: types.CallbackQuery, callback_data: MenuCallback):
-
     category_id = callback_data.category_id
     builder = InlineKeyboardBuilder()
+
     if category_id == 1:
         text = "Вы выбрали Камеры. В наличии:\n1. Sony A7 IV - 200к\n2. Canon R6 - 180к"
-        builder.button(text="Купить sony", callback_data=BuyCallback(action="buy_camera", message="Камера sony в корзине"))
-        builder.button(text="Купить canon", callback_data=BuyCallback(action="buy_camera", message="Камера canon в корзине") )
+        builder.button(text="Купить Sony", callback_data=BuyCallback(action="buy_camera", product_code="sony"))
+        builder.button(text="Купить Canon", callback_data=BuyCallback(action="buy_camera", product_code="canon"))
+        builder.adjust(2, 1)
     else:
         text = "Вы выбрали Объективы. В наличии:\n1. Sigma 35mm f/1.4 - 70к\n2. Sony 85mm f/1.4 - 120к"
 
@@ -53,12 +54,21 @@ async def process_category_click(callback: types.CallbackQuery, callback_data: M
     )
 
     await callback.message.edit_text(text=text, reply_markup=builder.as_markup())
-
     await callback.answer(text="Каталог обновлен", show_alert=False)
 
-@router.callback_query(MenuCallback.filter(F.action == "open_cat"))
-async def process_category_click(callback: types.CallbackQuery, callback_data: BuyCallback):
-    await callback.answer(text=callback_data.message, show_alert=False)
+
+@router.callback_query(BuyCallback.filter(F.action == "buy_camera"))
+async def process_buy_camera(callback: types.CallbackQuery, callback_data: BuyCallback):
+    code = callback_data.product_code
+
+    if code == "sony":
+        alert_text = "Камера Sony успешно добавлена в корзину!"
+    elif code == "canon":
+        alert_text = "Камера Canon успешно добавлена в корзину!"
+    else:
+        alert_text = "Товар добавлен в корзину"
+
+    await callback.answer(text=alert_text, show_alert=True)
 
 @router.callback_query(MenuCallback.filter(F.action == "main_menu"))
 async def return_to_main_menu(callback: types.CallbackQuery):
