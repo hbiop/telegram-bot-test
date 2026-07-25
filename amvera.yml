@@ -1,5 +1,11 @@
 meta:
-  environment: docker
+  environment: python
   toolchain:
-    name: docker
-    version: latest
+    name: pip
+    version: 3.14
+build:
+  requirementsPath: requirements.txt
+run:
+  scriptName: main.py
+  persistenceMount: /data
+  containerPort: 80
