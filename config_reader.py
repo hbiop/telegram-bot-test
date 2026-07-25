@@ -3,11 +3,14 @@ from pydantic import SecretStr
 
 class Config(BaseSettings):
     BOT_TOKEN: SecretStr
+    REDIS_URL: SecretStr
+    DB_USER: SecretStr
     DB_USER: SecretStr
     DB_PASSWORD: SecretStr
     HOST: str
     PORT: int
     DB_NAME: str
+
 
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
 

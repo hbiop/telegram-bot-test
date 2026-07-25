@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def main():
-    redis_instance = Redis.from_url("redis://localhost:6379/0")
+    redis_instance = Redis.from_url(config.REDIS_URL.get_secret_value())
 
     storage = RedisStorage(redis=redis_instance)
 
