@@ -11,10 +11,10 @@ logging.basicConfig(level=logging.INFO)
 
 async def main():
     redis_instance = Redis(
-        host="amvera-porem-578-run-redis-for-bot-test",
+        host="redis_db",
         port=6379,
         db=0,
-        password=config.REDIS_PASSWORD.get_secret_value()
+        password=config.REDIS_PASSWORD
     )
 
     storage = RedisStorage(redis=redis_instance)
