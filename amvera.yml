@@ -2,10 +2,10 @@ meta:
   environment: python
   toolchain:
     name: pip
-    version: 3.10
-
+    version: 3.14
 build:
-  requirements: requirements.txt
-
+  requirementsPath: requirements.txt
 run:
-  script: alembic upgrade head && python main.py
+  scriptName: main.py
+  persistenceMount: /data
+  containerPort: 80
