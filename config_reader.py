@@ -3,7 +3,7 @@ from pydantic import SecretStr
 
 class Config(BaseSettings):
     BOT_TOKEN: SecretStr
-    REDIS_URL: SecretStr
+    REDIS_PASSWORD: SecretStr
     DB_USER: SecretStr
     DB_PASSWORD: SecretStr
     HOST: str
