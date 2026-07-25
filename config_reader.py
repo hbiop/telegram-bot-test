@@ -5,7 +5,6 @@ class Config(BaseSettings):
     BOT_TOKEN: SecretStr
     REDIS_URL: SecretStr
     DB_USER: SecretStr
-    DB_USER: SecretStr
     DB_PASSWORD: SecretStr
     HOST: str
     PORT: int
