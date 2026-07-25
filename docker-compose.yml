@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    restart: always
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    depends_on:
+      - redis_db
+
+  redis_db:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
