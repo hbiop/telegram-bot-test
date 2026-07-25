@@ -11,10 +11,9 @@ logging.basicConfig(level=logging.INFO)
 
 async def main():
     redis_instance = Redis(
-        host="redis_db",
+        host="127.0.0.1",
         port=6379,
-        db=0,
-        password=config.REDIS_PASSWORD
+        db=0
     )
 
     storage = RedisStorage(redis=redis_instance)
