@@ -11,6 +11,9 @@ class MenuCallback(CallbackData, prefix="menu"):
     category_id: int
     item_id: int
 
+class BuyCallback(CallbackData, prefix="buy"):
+    action: str
+    message: str
 
 @router.message(Command("menu"))
 async def show_menu(message: types.Message):
@@ -36,13 +39,14 @@ async def show_menu(message: types.Message):
 async def process_category_click(callback: types.CallbackQuery, callback_data: MenuCallback):
 
     category_id = callback_data.category_id
-
+    builder = InlineKeyboardBuilder()
     if category_id == 1:
         text = "Вы выбрали Камеры. В наличии:\n1. Sony A7 IV - 200к\n2. Canon R6 - 180к"
+        builder.button(text="Купить sony", callback_data=BuyCallback(action="buy_camera", message="Камера sony в корзине"))
+        builder.button(text="Купить canon", callback_data=BuyCallback(action="buy_camera", message="Камера canon в корзине") )
     else:
         text = "Вы выбрали Объективы. В наличии:\n1. Sigma 35mm f/1.4 - 70к\n2. Sony 85mm f/1.4 - 120к"
 
-    builder = InlineKeyboardBuilder()
     builder.button(
         text="⬅️ Назад в меню",
         callback_data=MenuCallback(action="main_menu", category_id=0, item_id=0)
@@ -52,6 +56,9 @@ async def process_category_click(callback: types.CallbackQuery, callback_data: M
 
     await callback.answer(text="Каталог обновлен", show_alert=False)
 
+@router.callback_query(MenuCallback.filter(F.action == "open_cat"))
+async def process_category_click(callback: types.CallbackQuery, callback_data: BuyCallback):
+    await callback.answer(text=callback_data.message, show_alert=False)
 
 @router.callback_query(MenuCallback.filter(F.action == "main_menu"))
 async def return_to_main_menu(callback: types.CallbackQuery):
